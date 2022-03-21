@@ -22,8 +22,8 @@
 
 #define QUEUESIZE 10
 #define LOOP 100000
-#define PRODUCER 8
-#define CONSUMER 128
+#define PRODUCER 16
+#define CONSUMER 512
 
 struct timeval times[QUEUESIZE];
 double sum = 0.0;
@@ -78,7 +78,7 @@ int main ()
     }
     float average;
     average = sum / (PRODUCER * LOOP);
-    printf("\n\nthe average i hope is %.3f\n", average);
+    printf("\n\nthe average is %.3f\n", average);
 
     queueDelete (fifo);
 
@@ -99,7 +99,7 @@ void *producer (void *q)
             //printf ("producer: queue FULL.\n");
             pthread_cond_wait (fifo->notFull, fifo->mut);
         }
-        int *p = (int *)malloc(sizeof(int));
+        int *p = (int *)malloc(sizeof(int));  // Allocate memory so that the value *p will change and not point to the same previous address
         *p = i;
         item.arg = p;
         item.work = work;

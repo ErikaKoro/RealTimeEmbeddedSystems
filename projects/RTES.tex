@@ -1,0 +1,84 @@
+\documentclass[12pt, a4paper, twoside]{report}
+\usepackage{pgfplots}
+\usepackage[utf8]{inputenc}
+\usepackage{hyphenat}
+\usepackage{indentfirst}
+
+\hyphenpenalty 10000
+\exhyphenpenalty 10000
+\pgfplotsset{compat = newest}
+
+
+\title{Real Time Embedded Systems-1st assignment}
+\author{Erika Koro}
+\date{March 13, 2022}
+
+
+
+\begin{document}
+
+    \maketitle
+
+    \newpage 
+    \section*{Objective}
+
+    The objective of this assignment is to count the time between the insertion of an object
+    in the FIFO queue by the "producer" thread and its extraction by the "consumer" thread without
+    executing the function pointer.For a big number of loops,the optimal number of consumer-threads,
+    that minimizes the average waiting time, needs to be found as well.
+
+    \section*{Experiments}
+    
+    The experiments were executed in an AMD Ryzen 7 5800H, 3200.000 MHz. 
+    In order to stabilize the measurements, the number of loops was set at 100000.
+
+
+    \section*{Observations}
+
+    In the beginning the number of consumer-threads was kept stable and the number of producer-threads
+    was given different values. While the number of consumer-threads was bigger than the number of producer-threads
+    the average waiting time was very big. Keeping the producer-threads stable and giving bigger numbers
+    to the consumer-threads an optimization of the average waiting time was observed. What needs to be
+    underlined is that the best average waiting time is notified for a number of consumer-threads that is
+    16 times bigger than the number of producer-threads.   
+
+    \newpage
+    \section*{Plots}
+
+    Producer-Threads = 16(stable).
+    \pgfplotstableread{RTESplots.dat}{\table}
+
+    \begin{tikzpicture}
+        \begin{axis}[
+            title style={anchor=north, yshift=20},
+            title = {$Consumers-Waiting\ time$},
+            xmin = 0, xmax = 256,
+            ymin = 0, ymax = 25,
+            xtick distance = 32,
+            ytick distance = 5,
+            grid = both,
+            minor tick num = 1,
+            major grid style = {lightgray},
+            minor grid style = {lightgray!25},
+            width = \textwidth,
+            height = 0.7\textwidth,
+            xlabel = {$consumer-threads$},
+            ylabel = {$average\ waiting\ time$}
+        ]
+
+        \addplot[magenta, mark = *] table [x = {x}, y = {y}]{\table};
+        
+        \legend{
+            Plot with marks and line
+        }
+        \end{axis}
+    \end{tikzpicture}
+
+    \section*{Conclusion}
+
+    To sum up, by increasing the number of producer-threads the FIFO queue, most of the times, is full
+    and as a result the average waiting increases. On the contrast, by keeping the number of 
+    consumer-threads 16 times bigger than the number of producer-threads makes the FIFO queue, most
+    of the times, empty and so the waiting time decreases.
+
+\end{document}
